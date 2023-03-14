@@ -71,24 +71,35 @@ if __name__ == '__main__':
         at = random.randint(0, len(into) - 1)
         return into[:at] + what + into[at:]
 
-    def rand_pat():
+    def rand_pat(fixed, cnt):
         opts = string.ascii_lowercase + string.ascii_uppercase + string.digits
-        return 'ghp_' + rand_str(36, opts)
+        return fixed + rand_str(cnt, opts)
 
-    ascii_pattern = r'ghp_[A-Za-z0-9]{36}'
-    pattern = generate_regex(['ghp_', 36])
-    my_pat = rand_pat()
+    for i in range(1, 10):
+        fixed = rand_str(i)
+        cnt = random.randint(1, 50)
 
-    print('pat:', my_pat)
-    print('pattern:', pattern, len(pattern))
+        ascii_pattern = fixed + r'[A-Za-z0-9]' + r'{' + str(cnt) + r'}'
+        pattern = generate_regex([fixed, cnt])
+        my_pat = rand_pat(fixed, cnt)
 
-    test_count = 1000
-    for i in range(test_count):
-        text = inject_str(my_pat, rand_str(100))
-        extracted_from_src = re.findall(ascii_pattern, text)[0]
-        encoded = base64.b64encode(text.encode('ascii')).decode('ascii')
-        res = re.findall(pattern, encoded)[0]
-        decoded = base64.b64decode(res).decode('ascii')
+        # print('pat:', my_pat)
+        # print('pattern:', pattern, len(pattern))
 
-        extracted = re.findall(ascii_pattern, decoded)[0]
-        assert extracted == extracted_from_src
+        test_count = 1000
+        for i in range(test_count):
+            try:
+                text = inject_str(my_pat, rand_str(100))
+                extracted_from_src = re.findall(ascii_pattern, text)[0]
+                encoded = base64.b64encode(text.encode('ascii')).decode('ascii')
+                res = re.findall(pattern, encoded)[0]
+                decoded = base64.b64decode(res).decode('ascii')
+
+                extracted = re.findall(ascii_pattern, decoded)[0]
+                assert extracted == extracted_from_src
+            except Exception:
+                print(f"failed with: pat '{my_pat}' -- string '{fixed}' and len {cnt}")
+                print(f"random text:\n{text}\n")
+                raise
+    
+    print('like a boss')
