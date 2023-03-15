@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
     def inject_str(what, into):
         at = random.randint(0, len(into) - 1)
-        return into[:at] + what + into[at:]
+        return (into[:at] + what + into[at:], at)
 
     def rand_pat(fixed, cnt):
         opts = string.ascii_lowercase + string.ascii_uppercase + string.digits
@@ -89,9 +89,10 @@ if __name__ == '__main__':
         test_count = 1000
         for i in range(test_count):
             try:
-                text = inject_str(my_pat, rand_str(100))
+                text, at = inject_str(my_pat, rand_str(100))
                 extracted_from_src = re.findall(ascii_pattern, text)[0]
-                encoded = base64.b64encode(text.encode('ascii')).decode('ascii')
+                encoded_bytes = base64.b64encode(text.encode('ascii'))
+                encoded = encoded_bytes.decode('ascii')
                 res = re.findall(pattern, encoded)[0]
                 decoded = base64.b64decode(res).decode('ascii')
 
@@ -100,6 +101,10 @@ if __name__ == '__main__':
             except Exception:
                 print(f"failed with: pat '{my_pat}' -- string '{fixed}' and len {cnt}")
                 print(f"random text:\n{text}\n")
+                print(f"encoded text:\n{encoded}\n")
+                print(f"encoded bytes:\n{encoded_bytes}\n")
+                print(f"res:\n{res}\n")
+                print(f"injected at {at}")
                 raise
     
     print('like a boss')
