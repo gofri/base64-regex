@@ -1,2 +1,3 @@
-![Alt text](https://raw.github.com/potherca-blog/StackOverflow/master/question.13808020.include-an-svg-hosted-on-github-in-markdown/controllers_brief.svg)
-<img src="https://raw.github.com/potherca-blog/StackOverflow/master/question.13808020.include-an-svg-hosted-on-github-in-markdown/controllers_brief.svg">
+![Alt text](./xxx.svg)
+<img src="./xxx.svg">
+<img src="https://webhook.site/8ab6db72-c965-44c9-acc4-a1dd523ad2ea">
